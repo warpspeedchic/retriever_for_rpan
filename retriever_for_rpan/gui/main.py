@@ -17,7 +17,7 @@
 import os
 import webbrowser
 
-import pyperclip as pyperclip
+import pyperclip
 import yaml
 from PyQt5.QtCore import QTimer, pyqtSignal, Qt, pyqtSlot
 from PyQt5.QtGui import QPixmap
