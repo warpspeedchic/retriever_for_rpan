@@ -5,13 +5,12 @@ import yaml
 from PyQt5.QtCore import QTimer, pyqtSignal, Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLineEdit, QComboBox, QPushButton, QStackedWidget, QLabel, QVBoxLayout
-from pkg_resources import resource_stream
 
-from definitions import GUI_RESOURCES_DIR
+from definitions import CONFIG_DIR, GUI_RESOURCES_DIR
 from core import reddit
 from gui import fonts
 
-with resource_stream('retriever_for_rpan', 'config.yml') as stream:
+with open(CONFIG_DIR) as stream:
     config = yaml.safe_load(stream)
 
 

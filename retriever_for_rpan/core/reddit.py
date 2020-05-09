@@ -4,11 +4,11 @@ import urllib.parse
 import requests
 import requests.auth
 import yaml
-from pkg_resources import resource_stream
 
+from definitions import CONFIG_DIR
 from core import flaskapp
 
-with resource_stream('retriever_for_rpan', 'config.yml') as stream:
+with open(CONFIG_DIR) as stream:
     config = yaml.safe_load(stream)
 
 
