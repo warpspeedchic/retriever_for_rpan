@@ -1,10 +1,10 @@
 import os
 import urllib.parse
-from pkg_resources import resource_stream
 
-import yaml
 import requests
 import requests.auth
+import yaml
+from pkg_resources import resource_stream
 
 from core import flaskapp
 

@@ -1,0 +1,9 @@
+MainWindow
+{
+    background-color: #eeeeee;
+}
+
+Button
+{
+    padding: 8px;
+}
