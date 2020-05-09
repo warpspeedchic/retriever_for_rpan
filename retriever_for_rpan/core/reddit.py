@@ -1,3 +1,7 @@
+"""
+This module is meant to handle any requests that should be made to reddit.
+"""
+
 import os
 import urllib.parse
 
@@ -12,7 +16,12 @@ with open(CONFIG_DIR) as stream:
     config = yaml.safe_load(stream)
 
 
-def get_headers():
+def get_headers() -> dict:
+    """
+    Constructs a dictionary of request headers and returns it.
+
+    :return: headers
+    """
     headers = {'User-agent': config['user_agent']}
 
     access_token = os.getenv('ACCESS_TOKEN')
@@ -23,17 +32,32 @@ def get_headers():
 
 
 def get_me():
+    """
+    Returns json data containing information about the currently authorized user.
+
+    :return: json
+    """
     headers = get_headers()
     response = requests.get('http://oauth.reddit.com/api/v1/me', headers=headers)
     return response.json()
 
 
-def get_username():
+def get_username() -> str:
+    """
+    Returns the username of the currently authorized user.
+
+    :return: username
+    """
     me = get_me()
     return me['name']
 
 
-def get_authorization_url():
+def get_authorization_url() -> str:
+    """
+    Returns a code authorization URL.
+
+    :return: URL
+    """
     state = flaskapp.create_state()
     params = {'client_id': config['client_id'],
               'response_type': 'code',
@@ -44,7 +68,15 @@ def get_authorization_url():
     return url
 
 
-def get_token(code):
+def get_token(code: str) -> bool:
+    """
+    Gets an access token using the code flow.
+    Saves it in an env var called 'ACCESS_TOKEN' and returns True.
+    Returns False if it fails.
+
+    :param code: code received from reddit's callback
+    :return: bool
+    """
     client_auth = requests.auth.HTTPBasicAuth(config['client_id'], '')
     post_data = {'grant_type': 'authorization_code',
                  'code': code,
@@ -62,7 +94,14 @@ def get_token(code):
         return False
 
 
-def post_broadcast(title: str, subreddit: str):
+def post_broadcast(title: str, subreddit: str) -> requests.Response:
+    """
+    Posts a broadcast request to a specified subreddit.
+
+    :param title: Title of the broadcast
+    :param subreddit: Subreddit to which the broadcast should be posted
+    :return: requests.Response
+    """
     headers = get_headers()
     title = urllib.parse.quote(title)
     url = f'https://strapi.reddit.com/r/{subreddit}/broadcasts?title={title}'
