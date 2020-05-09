@@ -1,4 +1,3 @@
-import os
 from uuid import uuid4
 
 from flask import Flask, request, abort
@@ -20,7 +19,6 @@ def callback():
         abort(403)
     code = request.args.get('code')
     if reddit.get_token(code):
-        print(os.getenv('ACCESS_TOKEN'))
         return 'Token obtained'
     else:
         return 'We had trouble obtaining the token'
