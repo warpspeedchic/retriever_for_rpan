@@ -1,10 +1,12 @@
 import os
 import webbrowser
 
+import pyperclip as pyperclip
 import yaml
-from PyQt5.QtCore import QTimer, pyqtSignal, Qt
+from PyQt5.QtCore import QTimer, pyqtSignal, Qt, pyqtSlot
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLineEdit, QComboBox, QPushButton, QStackedWidget, QLabel, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLineEdit, QComboBox, QPushButton, QStackedWidget, QLabel, \
+    QVBoxLayout, QMessageBox
 
 from definitions import CONFIG_DIR, GUI_RESOURCES_DIR
 from core import reddit
@@ -30,7 +32,7 @@ class LineEdit(QLineEdit):
 
 class Button(QPushButton):
 
-    def __init__(self, text: str):
+    def __init__(self, text: str = None):
         super(Button, self).__init__(text)
         self.setFont(fonts.button)
 
@@ -75,9 +77,13 @@ class AuthWidget(QWidget):
         self.auth_button = Button('Authorize')
         self.auth_button.clicked.connect(self.authorize)
 
+        self.help_button = Button('Help')
+        self.help_button.clicked.connect(self.help)
+
         self.layout = QGridLayout()
         self.layout.addWidget(QWidget())
         self.layout.addWidget(self.auth_button, 1, 0, Qt.AlignHCenter)
+        self.layout.addWidget(self.help_button, 2, 0, Qt.AlignHCenter)
         self.layout.addWidget(QWidget())
         self.layout.addWidget(QWidget())
         self.setLayout(self.layout)
@@ -95,8 +101,15 @@ class AuthWidget(QWidget):
             self.token_found.emit()
             self.timer.stop()
 
+    @staticmethod
+    def help():
+        help_url = 'https://github.com/warpspeedchic/Retriever-for-RPAN/blob/master/README.md'
+        webbrowser.open(help_url)
+
 
 class StreamSetupWidget(QWidget):
+
+    stream_started = pyqtSignal()
 
     def __init__(self):
         super(StreamSetupWidget, self).__init__()
@@ -113,6 +126,9 @@ class StreamSetupWidget(QWidget):
             self.subreddit_combo.addItem(f'r/{subreddit}')
 
         self.start_stream_button = Button('Start streaming')
+        self.start_stream_button.clicked.connect(self.start_stream)
+
+        self.disable_all_widgets()
 
         self.layout = QGridLayout()
         self.layout.setSpacing(6)
@@ -123,8 +139,86 @@ class StreamSetupWidget(QWidget):
         self.layout.addWidget(QWidget(), 5, 0, 1, 2)
         self.setLayout(self.layout)
 
-    def set_username(self):
+    def initialize(self):
         self.username_line.setText(f'u/{reddit.get_username()}')
+        self.enable_all_widgets()
+
+    def start_stream(self):
+        self.disable_all_widgets()
+
+        title = self.stream_title_line.text()
+        if len(title) == 0:
+            QMessageBox().information(self, 'Insufficient title length', 'Your title must be longer.')
+            self.enable_all_widgets()
+            return
+
+        _, subreddit = self.subreddit_combo.currentText().split('/')
+
+        response = reddit.post_broadcast(title, subreddit)
+        status_code = response.status_code
+        if status_code != 200:
+            QMessageBox().information(self, 'Error', f"Couldn't start a stream, status code: {status_code}")
+            self.enable_all_widgets()
+            return
+
+        self.stream_started.emit()
+
+    def disable_all_widgets(self):
+        self.username_line.setDisabled(True)
+        self.stream_title_line.setDisabled(True)
+        self.subreddit_combo.setDisabled(True)
+        self.start_stream_button.setDisabled(True)
+
+    def enable_all_widgets(self):
+        self.username_line.setEnabled(True)
+        self.stream_title_line.setEnabled(True)
+        self.subreddit_combo.setEnabled(True)
+        self.start_stream_button.setEnabled(True)
+
+
+class StreamReadyWidget(QWidget):
+
+    def __init__(self):
+        super(StreamReadyWidget, self).__init__()
+
+        self.key_line = LineEdit()
+        self.key_line.setText('15f0878f-a1a6-40d0-bc9b-9fb25c7496a5')
+        self.key_line.setReadOnly(True)
+        self.copy_key_button = Button('Copy stream key')
+        self.copy_key_button.clicked.connect(self.copy_key)
+
+        self.rtmp_line = LineEdit()
+        self.rtmp_line.setReadOnly(True)
+        self.copy_rtmp_button = Button('Copy server URL')
+        self.copy_rtmp_button.clicked.connect(self.copy_rtmp)
+
+        self.open_stream_url_button = Button('Open stream URL')
+        self.open_stream_url_button.clicked.connect(self.open_stream_url)
+
+        self.layout = QGridLayout()
+        self.layout.addWidget(self.key_line, 0, 0, 1, 4)
+        self.layout.addWidget(self.rtmp_line, 1, 0, 1, 4)
+        self.layout.addWidget(self.copy_key_button, 0, 4, 1, 1)
+        self.layout.addWidget(self.copy_rtmp_button, 1, 4, 1, 1)
+        self.layout.addWidget(self.open_stream_url_button, 3, 0, 1, 5)
+        self.layout.addWidget(QWidget())
+        self.setLayout(self.layout)
+
+    def initialize(self):
+        self.key_line.setText(os.getenv('STREAMER_KEY'))
+        self.rtmp_line.setText('rtmp://ingest.redd.it/inbound/')
+
+    def copy_key(self):
+        pyperclip.copy(self.key_line.text())
+
+    def copy_rtmp(self):
+        pyperclip.copy(self.rtmp_line.text())
+
+    @staticmethod
+    def open_stream_url():
+        if 'STREAM_URL' not in os.environ:
+            return
+        webbrowser.open(os.getenv('STREAM_URL'))
 
 
 class MainWindow(QWidget):
@@ -137,11 +231,14 @@ class MainWindow(QWidget):
         self.auth_widget = AuthWidget()
         self.auth_widget.token_found.connect(self.on_token_found)
         self.stream_setup_widget = StreamSetupWidget()
+        self.stream_setup_widget.stream_started.connect(self.on_stream_started)
+        self.stream_ready_widget = StreamReadyWidget()
 
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.auth_widget)
         self.stacked_widget.addWidget(self.stream_setup_widget)
-        # self.stacked_widget.setCurrentIndex(1)
+        self.stacked_widget.addWidget(self.stream_ready_widget)
+        self.stacked_widget.setCurrentIndex(0)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.title_widget, alignment=Qt.AlignHCenter)
@@ -149,9 +246,14 @@ class MainWindow(QWidget):
         self.setLayout(self.layout)
 
         self.setWindowTitle('Retriever for RPAN')
-        self.setFixedSize(480, 320)
-        self.setContentsMargins(50, 0, 50, 0)
+        self.setFixedSize(440, 300)
 
+    @pyqtSlot()
     def on_token_found(self):
-        self.stream_setup_widget.set_username()
+        self.stream_setup_widget.initialize()
         self.stacked_widget.setCurrentIndex(1)
+
+    @pyqtSlot()
+    def on_stream_started(self):
+        self.stream_ready_widget.initialize()
+        self.stacked_widget.setCurrentIndex(2)
