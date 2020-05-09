@@ -142,7 +142,7 @@ class StreamSetupWidget(QWidget):
         for subreddit in config['subreddits']:
             self.subreddit_combo.addItem(f'r/{subreddit}')
 
-        self.start_stream_button = Button('Start streaming')
+        self.start_stream_button = Button('Set up the stream')
         self.start_stream_button.clicked.connect(self.start_stream)
 
         self.disable_all_widgets()
@@ -269,7 +269,7 @@ class MainWindow(QWidget):
         self.setLayout(self.layout)
 
         self.setWindowTitle(f"{config['name']} {config['version']}")
-        self.setFixedSize(450, 320)
+        self.setFixedSize(450, 340)
 
     @pyqtSlot()
     def on_token_found(self):
