@@ -1,4 +1,6 @@
 ---
+name: Retriever for RPAN
+version: 0.1.0
 client_id: ohXpoqrZYub1kg
 redirect_uri: http://localhost:65010/callback
 user_agent: Retriever for RPAN (by u/mingoXII)

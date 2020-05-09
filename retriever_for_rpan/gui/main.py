@@ -268,7 +268,7 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.stacked_widget)
         self.setLayout(self.layout)
 
-        self.setWindowTitle('Retriever for RPAN')
+        self.setWindowTitle(f"{config['name']} {config['version']}")
         self.setFixedSize(450, 320)
 
     @pyqtSlot()
