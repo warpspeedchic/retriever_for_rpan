@@ -35,6 +35,7 @@ class Button(QPushButton):
     def __init__(self, text: str = None):
         super(Button, self).__init__(text)
         self.setFont(fonts.button)
+        self.setMinimumWidth(80)
 
 
 class TitleWidget(QWidget):
@@ -186,12 +187,13 @@ class StreamReadyWidget(QWidget):
         super(StreamReadyWidget, self).__init__()
 
         self.key_line = LineEdit()
-        self.key_line.setText('15f0878f-a1a6-40d0-bc9b-9fb25c7496a5')
+        self.key_line.setPlaceholderText('Streamer key')
         self.key_line.setReadOnly(True)
         self.copy_key_button = Button('Copy stream key')
         self.copy_key_button.clicked.connect(self.copy_key)
 
         self.rtmp_line = LineEdit()
+        self.rtmp_line.setPlaceholderText('RTMP URL')
         self.rtmp_line.setReadOnly(True)
         self.copy_rtmp_button = Button('Copy server URL')
         self.copy_rtmp_button.clicked.connect(self.copy_rtmp)
@@ -200,10 +202,11 @@ class StreamReadyWidget(QWidget):
         self.open_stream_url_button.clicked.connect(self.open_stream_url)
 
         self.layout = QGridLayout()
-        self.layout.addWidget(self.key_line, 0, 0, 1, 4)
-        self.layout.addWidget(self.rtmp_line, 1, 0, 1, 4)
-        self.layout.addWidget(self.copy_key_button, 0, 4, 1, 1)
-        self.layout.addWidget(self.copy_rtmp_button, 1, 4, 1, 1)
+        self.layout.addWidget(QWidget())
+        self.layout.addWidget(self.key_line, 1, 0, 1, 4)
+        self.layout.addWidget(self.rtmp_line, 2, 0, 1, 4)
+        self.layout.addWidget(self.copy_key_button, 1, 4, 1, 1)
+        self.layout.addWidget(self.copy_rtmp_button, 2, 4, 1, 1)
         self.layout.addWidget(self.open_stream_url_button, 3, 0, 1, 5)
         self.layout.addWidget(QWidget())
         self.setLayout(self.layout)
@@ -250,7 +253,7 @@ class MainWindow(QWidget):
         self.setLayout(self.layout)
 
         self.setWindowTitle('Retriever for RPAN')
-        self.setFixedSize(440, 300)
+        self.setFixedSize(450, 320)
 
     @pyqtSlot()
     def on_token_found(self):
