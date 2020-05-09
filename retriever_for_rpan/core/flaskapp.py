@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from flask import Flask, request, abort
 
+from definitions import GUI_RESOURCES_DIR
 from core import reddit
 
 app = Flask('Retriever for RPAN')
@@ -19,9 +20,14 @@ def callback():
         abort(403)
     code = request.args.get('code')
     if reddit.get_token(code):
-        return 'Token obtained'
+        text = 'Token obtained'
     else:
-        return 'We had trouble obtaining the token'
+        text = 'We had trouble obtaining the token'
+    html = f'<head>' \
+           f'<title>Retriever for RPAN - {text}</title>' \
+           f'</head>' \
+           f'<body style="font-family:sans-serif;">{text}</body>'
+    return html
 
 
 def create_state() -> str:
