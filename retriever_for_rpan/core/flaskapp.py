@@ -20,7 +20,7 @@ def callback():
         abort(403)
     code = request.args.get('code')
     if reddit.get_token(code):
-        text = 'Token obtained'
+        text = 'Token obtained, you may now close this tab'
     else:
         text = 'We had trouble obtaining the token'
     html = f'<head>' \
