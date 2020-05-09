@@ -157,7 +157,11 @@ class StreamSetupWidget(QWidget):
         response = reddit.post_broadcast(title, subreddit)
         status_code = response.status_code
         if status_code != 200:
-            QMessageBox().information(self, 'Error', f"Couldn't start a stream, status code: {status_code}")
+            if status_code == 503 and subreddit == 'pan':
+                error_str = "r/pan is unavailable right now.\nTry a different subreddit."
+            else:
+                error_str = f"Couldn't start a stream, status code: {status_code}"
+            QMessageBox().information(self, 'Stream setup unsuccessful', error_str)
             self.enable_all_widgets()
             return
 
