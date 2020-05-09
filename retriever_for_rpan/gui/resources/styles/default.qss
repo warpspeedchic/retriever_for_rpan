@@ -1,9 +1,45 @@
 MainWindow
 {
-    background-color: #eeeeee;
+    background-color: #ffffff;
+}
+
+Button, LineEdit, ComboBox
+{
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ffffff;
+    padding: 6px;
+}
+
+Button:disabled, LineEdit:disabled, ComboBox:disabled
+{
+    background-color: #dddddd;
 }
 
 Button
 {
-    padding: 8px;
+    background-color: #e6d46b;
+    border-color: #ffffff;
+}
+
+Button:pressed
+{
+    color: #ffffff;
+}
+
+ComboBox::drop-down
+{
+    border: none;
+}
+
+ComboBox::down-arrow
+{
+    image: none;
+    background: none;
+}
+
+ComboBox QAbstractItemView
+{
+    border: none;
+    background: #ffffff;
 }
