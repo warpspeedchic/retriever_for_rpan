@@ -93,6 +93,11 @@ class AuthWidget(QWidget):
         self.timer.setInterval(1000)
         self.timer.timeout.connect(self.check_for_token)
 
+    @staticmethod
+    def help():
+        help_url = 'https://github.com/warpspeedchic/Retriever-for-RPAN/blob/master/README.md'
+        webbrowser.open(help_url)
+
     def authorize(self):
         self.timer.start()
         webbrowser.open(reddit.get_authorization_url())
@@ -101,11 +106,6 @@ class AuthWidget(QWidget):
         if 'ACCESS_TOKEN' in os.environ:
             self.token_found.emit()
             self.timer.stop()
-
-    @staticmethod
-    def help():
-        help_url = 'https://github.com/warpspeedchic/Retriever-for-RPAN/blob/master/README.md'
-        webbrowser.open(help_url)
 
 
 class StreamSetupWidget(QWidget):
