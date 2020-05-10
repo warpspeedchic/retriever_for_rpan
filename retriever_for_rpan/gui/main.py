@@ -216,15 +216,18 @@ class StreamReadyWidget(QWidget):
         self.copy_rtmp_button = Button('Copy server URL')
         self.copy_rtmp_button.clicked.connect(self.copy_rtmp)
 
+        self.copy_stream_url_button = Button('Copy stream URL')
+        self.copy_stream_url_button.clicked.connect(self.copy_stream_url)
         self.open_stream_url_button = Button('Open stream URL')
         self.open_stream_url_button.clicked.connect(self.open_stream_url)
 
         self.layout = QGridLayout()
         self.layout.addWidget(QWidget())
-        self.layout.addWidget(self.key_line, 1, 0, 1, 4)
-        self.layout.addWidget(self.rtmp_line, 2, 0, 1, 4)
-        self.layout.addWidget(self.copy_key_button, 1, 4, 1, 1)
-        self.layout.addWidget(self.copy_rtmp_button, 2, 4, 1, 1)
+        self.layout.addWidget(self.key_line, 1, 0, 1, 5)
+        self.layout.addWidget(self.rtmp_line, 2, 0, 1, 5)
+        self.layout.addWidget(self.copy_key_button, 1, 5, 1, 1)
+        self.layout.addWidget(self.copy_rtmp_button, 2, 5, 1, 1)
+        self.layout.addWidget(self.copy_stream_url_button, 3, 5, 1, 1)
         self.layout.addWidget(self.open_stream_url_button, 3, 0, 1, 5)
         self.layout.addWidget(QWidget())
         self.setLayout(self.layout)
@@ -239,11 +242,15 @@ class StreamReadyWidget(QWidget):
     def copy_rtmp(self):
         pyperclip.copy(self.rtmp_line.text())
 
+    def copy_stream_url(self):
+        pyperclip.copy(self.stream_url_line.text())
+
     @staticmethod
     def open_stream_url():
-        if 'STREAM_URL' not in os.environ:
+        url = os.getenv('STREAMER_KEY')
+        if url is None:
             return
-        webbrowser.open(os.getenv('STREAM_URL'))
+        webbrowser.open(url)
 
 
 class MainWindow(QWidget):
@@ -271,7 +278,7 @@ class MainWindow(QWidget):
         self.setLayout(self.layout)
 
         self.setWindowTitle(f"{config['name']} {config['version']}")
-        self.setFixedSize(450, 340)
+        self.setFixedSize(470, 340)
         self.setWindowFlags(Qt.Window | Qt.MSWindowsFixedSizeDialogHint)
 
     @pyqtSlot()
