@@ -1,7 +1,7 @@
 # Retriever for RPAN
-### Stream on the Reddit Public Access Network straight from your PC - simple and hustle-free
+### Stream on the Reddit Public Access Network straight from your PC - it's simple and hustle-free
 
-Wanna take your RPAN broadcasts to a next level? This is the app you've been looking for! It sets up a stream for you and retrieves (hence the name) the key to it. Pair it with any streaming software and you're good to go - it's really easy to use and completely free.
+Wanna take your RPAN broadcasts to the next level? This is the app you've been looking for! It sets up a stream for you and retrieves the key to it. Pair it with any streaming software and you're good to go - it's really easy to use and completely free.
 
 ## FAQ
 #### Is this a virus?
@@ -12,6 +12,8 @@ Yes, but don't worry - it only needs it to create a broadcast for you. It does s
 No, the software is free and will remain that way.
 #### Will this get me banned on RPAN/Reddit?
 No! Many people have been streaming using this method, nobody gets in trouble for it.
+#### Are you planning to release it on Mac OS/Linux?
+Yes, it's on my to-do list.
 
 ## Downloads
 Go to [releases](https://github.com/warpspeedchic/retriever_for_rpan/releases/) for downloads.
