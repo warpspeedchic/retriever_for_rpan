@@ -243,12 +243,16 @@ class StreamReadyWidget(QWidget):
     def copy_rtmp(self):
         pyperclip.copy(self.rtmp_line.text())
 
-    def copy_stream_url(self):
-        pyperclip.copy(self.stream_url_line.text())
+    @staticmethod
+    def copy_stream_url():
+        url = os.getenv('STREAM_URL')
+        if url is None:
+            return
+        pyperclip.copy(url)
 
     @staticmethod
     def open_stream_url():
-        url = os.getenv('STREAMER_KEY')
+        url = os.getenv('STREAM_URL')
         if url is None:
             return
         webbrowser.open(url)
