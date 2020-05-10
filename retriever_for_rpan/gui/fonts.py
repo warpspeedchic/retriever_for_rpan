@@ -16,11 +16,11 @@
 
 from PyQt5.QtGui import QFont, QFontDatabase
 
-from definitions import GUI_RESOURCES_DIR
+from definitions import DATA_DIR
 
 
 def init():
-    QFontDatabase.addApplicationFont(GUI_RESOURCES_DIR + 'fonts/RobotoCondensed-Regular.ttf')
+    QFontDatabase.addApplicationFont(DATA_DIR + 'fonts/RobotoCondensed-Regular.ttf')
 
 
 roboto_condensed = 'Roboto Condensed'

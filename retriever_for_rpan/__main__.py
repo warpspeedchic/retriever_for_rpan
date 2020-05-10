@@ -20,7 +20,7 @@ from threading import Thread
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 
-from definitions import GUI_RESOURCES_DIR
+from definitions import DATA_DIR
 from core import server
 from gui.main import MainWindow
 from gui import fonts
@@ -30,10 +30,9 @@ if __name__ == "__main__":
     server_thread.start()
 
     app = QApplication([])
-    app.setStyle('fusion')
-    with open(GUI_RESOURCES_DIR + 'styles/default.qss') as stylesheet:
+    with open(DATA_DIR + 'styles/default.qss') as stylesheet:
         app.setStyleSheet(stylesheet.read())
-    app.setWindowIcon(QIcon(GUI_RESOURCES_DIR + 'img/dog_icon.ico'))
+    app.setWindowIcon(QIcon(DATA_DIR + 'img/dog_icon.ico'))
     fonts.init()
     main_window = MainWindow()
     main_window.show()

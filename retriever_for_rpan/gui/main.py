@@ -24,7 +24,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLineEdit, QComboBox, QPushButton, QStackedWidget, QLabel, \
     QVBoxLayout, QMessageBox
 
-from definitions import CONFIG_DIR, GUI_RESOURCES_DIR
+from definitions import CONFIG_DIR, DATA_DIR
 from core import reddit
 from gui import fonts
 
@@ -64,7 +64,7 @@ class TitleWidget(QWidget):
         self.doggo_label.setFixedSize(60, 100)
 
         self.doggo_pixmap = QPixmap()
-        if self.doggo_pixmap.load(GUI_RESOURCES_DIR + 'img/dog.png'):
+        if self.doggo_pixmap.load(DATA_DIR + 'img/dog.png'):
             self.doggo_pixmap = self.doggo_pixmap.scaled(self.doggo_label.size(), Qt.KeepAspectRatio,
                                                          transformMode=Qt.SmoothTransformation)
             self.doggo_label.setPixmap(self.doggo_pixmap)
@@ -139,7 +139,9 @@ class StreamSetupWidget(QWidget):
         self.stream_title_line.setPlaceholderText('Stream title')
 
         self.subreddit_combo = ComboBox()
-        for subreddit in config['subreddits']:
+        subreddits = config['subreddits']
+        self.subreddit_combo.setMaxVisibleItems(len(subreddits))
+        for subreddit in subreddits:
             self.subreddit_combo.addItem(f'r/{subreddit}')
 
         self.start_stream_button = Button('Set up the stream')
@@ -270,6 +272,7 @@ class MainWindow(QWidget):
 
         self.setWindowTitle(f"{config['name']} {config['version']}")
         self.setFixedSize(450, 340)
+        self.setWindowFlags(Qt.Window | Qt.MSWindowsFixedSizeDialogHint)
 
     @pyqtSlot()
     def on_token_found(self):
