@@ -17,10 +17,26 @@
 """
 This module defines a server which runs the Flask app on localhost, so it can interpret reddit's callbacks.
 """
+from typing import Optional
 
+import psutil
 from waitress import serve
 
 from core.flaskapp import app
+
+
+def get_port_blocker_name() -> Optional[str]:
+    """
+    Looks through system-wide connections to see if the required port is taken.
+    If it is, it returns the name of the process that's using the port
+
+    :return: process name
+    """
+    for connection in psutil.net_connections():
+        if connection.laddr.port == 65010:
+            process = psutil.Process(connection.pid)
+            return process.name()
+    return None
 
 
 def run():
