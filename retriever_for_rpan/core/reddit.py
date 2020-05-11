@@ -78,8 +78,7 @@ def get_video_json():
     stream_id = os.getenv('STREAM_ID')
     if stream_id is None:
         return None
-    _, stream_id = stream_id.split('_')
-    response = requests.get(f'https://strapi.reddit.com/videos/t3_{stream_id}', headers=get_headers())
+    response = requests.get(f'https://strapi.reddit.com/videos/{stream_id}', headers=get_headers())
     if response.status_code != 200:
         return None
     return response.json()

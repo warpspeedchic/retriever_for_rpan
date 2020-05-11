@@ -60,6 +60,7 @@ class ChatWidget(QWidget):
         self.layout.addWidget(self.message_area)
         self.setLayout(self.layout)
 
+    @pyqtSlot(str)
     def on_comment_received(self, comment):
         comment = json.loads(comment)
         payload = comment['payload']
