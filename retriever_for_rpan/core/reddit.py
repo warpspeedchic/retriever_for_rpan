@@ -102,7 +102,7 @@ def get_authorization_url() -> str:
     """
     Returns a code authorization URL.
 
-    :return: URL
+    :return: url
     """
     state = flaskapp.create_state()
     params = {'client_id': config['client_id'],
