@@ -70,6 +70,11 @@ def get_username() -> str:
 
 
 def get_video_json():
+    """
+    Returns a json with the info about the current stream.
+
+    :return: json
+    """
     stream_id = os.getenv('STREAM_ID')
     if stream_id is None:
         return None
@@ -81,6 +86,11 @@ def get_video_json():
 
 
 def get_live_comments_websocket() -> Optional[str]:
+    """
+    Returns a websocket URL to live comments of the current stream.
+
+    :return: websocket url
+    """
     video_json = get_video_json()
     if video_json is None:
         return None
