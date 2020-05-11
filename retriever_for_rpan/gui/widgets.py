@@ -16,7 +16,7 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QComboBox, QLineEdit, QPushButton, QLabel, QWidget, QGridLayout
+from PyQt5.QtWidgets import QComboBox, QLineEdit, QPushButton, QLabel, QWidget, QGridLayout, QPlainTextEdit
 
 from definitions import DATA_DIR
 from gui import fonts
@@ -33,6 +33,13 @@ class LineEdit(QLineEdit):
 
     def __init__(self):
         super(LineEdit, self).__init__()
+        self.setFont(fonts.line)
+
+
+class PlainTextEdit(QPlainTextEdit):
+
+    def __init__(self):
+        super(PlainTextEdit, self).__init__()
         self.setFont(fonts.line)
 
 
