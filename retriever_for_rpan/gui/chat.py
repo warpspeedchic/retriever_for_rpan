@@ -48,6 +48,7 @@ class ChatWidget(QWidget):
 
     def __init__(self):
         super(ChatWidget, self).__init__()
+        self.setWindowTitle('Chat')
         self.chat = Chat()
         self.chat.comment_received.connect(self.on_comment_received)
         self.chat.connect()
@@ -64,5 +65,4 @@ class ChatWidget(QWidget):
         payload = comment['payload']
         author = payload['author']
         body = payload['body']
-        print(payload)
         self.message_area.appendHtml(f'<b>{author}</b>: {body}')

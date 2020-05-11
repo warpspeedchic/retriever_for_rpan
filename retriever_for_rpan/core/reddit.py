@@ -20,6 +20,7 @@ This module is meant to handle any requests that should be made to reddit.
 
 import os
 import urllib.parse
+from typing import Optional
 
 import requests
 import requests.auth
@@ -66,6 +67,25 @@ def get_username() -> str:
     """
     me = get_me()
     return me['name']
+
+
+def get_video_json():
+    stream_id = os.getenv('STREAM_ID')
+    if stream_id is None:
+        return None
+    _, stream_id = stream_id.split('_')
+    response = requests.get(f'https://strapi.reddit.com/videos/t3_{stream_id}', headers=get_headers())
+    if response.status_code != 200:
+        return None
+    return response.json()
+
+
+def get_live_comments_websocket() -> Optional[str]:
+    video_json = get_video_json()
+    if video_json is None:
+        return None
+    live_comments_websocket = video_json['data']['post']['liveCommentsWebsocket']
+    return live_comments_websocket
 
 
 def get_authorization_url() -> str:
@@ -126,4 +146,5 @@ def post_broadcast(title: str, subreddit: str) -> requests.Response:
         rjson = response.json()
         os.environ['STREAMER_KEY'] = rjson['data']['streamer_key']
         os.environ['STREAM_URL'] = rjson['data']['post']['url']
+        os.environ['STREAM_ID'] = rjson['data']['post']['id']
     return response

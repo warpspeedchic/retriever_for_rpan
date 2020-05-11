@@ -24,6 +24,7 @@ from PyQt5.QtWidgets import QWidget, QGridLayout, QStackedWidget, QVBoxLayout, Q
 
 from definitions import CONFIG_DIR
 from core import reddit
+from gui.chat import ChatWidget
 from gui.widgets import Button, LineEdit, ComboBox, TitleWidget
 
 with open(CONFIG_DIR) as stream:
@@ -168,6 +169,11 @@ class StreamReadyWidget(QWidget):
         self.open_stream_url_button = Button('Open stream URL')
         self.open_stream_url_button.clicked.connect(self.open_stream_url)
 
+        self.chat_widget = QWidget()
+
+        self.open_chat_button = Button('Open chat')
+        self.open_chat_button.clicked.connect(self.open_chat_window)
+
         self.layout = QGridLayout()
         self.layout.addWidget(QWidget())
         self.layout.addWidget(self.key_line, 1, 0, 1, 5)
@@ -176,12 +182,14 @@ class StreamReadyWidget(QWidget):
         self.layout.addWidget(self.copy_rtmp_button, 2, 5, 1, 1)
         self.layout.addWidget(self.copy_stream_url_button, 3, 5, 1, 1)
         self.layout.addWidget(self.open_stream_url_button, 3, 0, 1, 5)
+        self.layout.addWidget(self.open_chat_button, 4, 0, 1, 6)
         self.layout.addWidget(QWidget())
         self.setLayout(self.layout)
 
     def initialize(self):
         self.key_line.setText(os.getenv('STREAMER_KEY'))
         self.rtmp_line.setText('rtmp://ingest.redd.it/inbound/')
+        self.chat_widget = ChatWidget()
 
     def copy_key(self):
         pyperclip.copy(self.key_line.text())
@@ -203,6 +211,9 @@ class StreamReadyWidget(QWidget):
             return
         webbrowser.open(url)
 
+    def open_chat_window(self):
+        self.chat_widget.show()
+
 
 class MainWindow(QWidget):
 
@@ -221,7 +232,7 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.auth_widget)
         self.stacked_widget.addWidget(self.stream_setup_widget)
         self.stacked_widget.addWidget(self.stream_ready_widget)
-        self.stacked_widget.setCurrentIndex(1)
+        self.stacked_widget.setCurrentIndex(0)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.title_widget, alignment=Qt.AlignHCenter)
