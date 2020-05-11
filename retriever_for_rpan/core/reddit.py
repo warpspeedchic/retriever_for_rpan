@@ -89,7 +89,7 @@ def get_live_comments_websocket() -> Optional[str]:
     """
     Returns a websocket URL to live comments of the current stream.
 
-    :return: websocket url
+    :return: websocket URL
     """
     video_json = get_video_json()
     if video_json is None:
@@ -102,7 +102,7 @@ def get_authorization_url() -> str:
     """
     Returns a code authorization URL.
 
-    :return: url
+    :return: URL
     """
     state = flaskapp.create_state()
     params = {'client_id': config['client_id'],
