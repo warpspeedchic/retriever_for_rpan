@@ -20,68 +20,14 @@ import webbrowser
 import pyperclip
 import yaml
 from PyQt5.QtCore import QTimer, pyqtSignal, Qt, pyqtSlot
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLineEdit, QComboBox, QPushButton, QStackedWidget, QLabel, \
-    QVBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QWidget, QGridLayout, QStackedWidget, QVBoxLayout, QMessageBox
 
-from definitions import CONFIG_DIR, DATA_DIR
+from definitions import CONFIG_DIR
 from core import reddit
-from gui import fonts
+from gui.widgets import Button, LineEdit, ComboBox, TitleWidget
 
 with open(CONFIG_DIR) as stream:
     config = yaml.safe_load(stream)
-
-
-class ComboBox(QComboBox):
-
-    def __init__(self):
-        super(ComboBox, self).__init__()
-        self.setFont(fonts.line)
-
-
-class LineEdit(QLineEdit):
-
-    def __init__(self):
-        super(LineEdit, self).__init__()
-        self.setFont(fonts.line)
-
-
-class Button(QPushButton):
-
-    def __init__(self, text: str = None):
-        super(Button, self).__init__(text)
-        self.setFont(fonts.button)
-        self.setMinimumWidth(80)
-
-
-class TitleWidget(QWidget):
-
-    def __init__(self):
-        super(TitleWidget, self).__init__()
-
-        self.doggo_label = QLabel()
-        self.doggo_label.setAlignment(Qt.AlignLeft)
-        self.doggo_label.setFixedSize(60, 100)
-
-        self.doggo_pixmap = QPixmap()
-        if self.doggo_pixmap.load(DATA_DIR + 'img/dog.png'):
-            self.doggo_pixmap = self.doggo_pixmap.scaled(self.doggo_label.size(), Qt.KeepAspectRatio,
-                                                         transformMode=Qt.SmoothTransformation)
-            self.doggo_label.setPixmap(self.doggo_pixmap)
-
-        self.title = QLabel('Retriever')
-        self.title.setFont(fonts.title)
-
-        self.subtitle = QLabel('for RPAN')
-        self.subtitle.setFont(fonts.subtitle)
-        self.subtitle.setAlignment(Qt.AlignHCenter)
-
-        self.layout = QGridLayout()
-        self.layout.setSpacing(0)
-        self.layout.addWidget(self.doggo_label, 0, 0, 2, 1)
-        self.layout.addWidget(self.title, 0, 1)
-        self.layout.addWidget(self.subtitle, 1, 1)
-        self.setLayout(self.layout)
 
 
 class AuthWidget(QWidget):
@@ -275,7 +221,7 @@ class MainWindow(QWidget):
         self.stacked_widget.addWidget(self.auth_widget)
         self.stacked_widget.addWidget(self.stream_setup_widget)
         self.stacked_widget.addWidget(self.stream_ready_widget)
-        self.stacked_widget.setCurrentIndex(0)
+        self.stacked_widget.setCurrentIndex(1)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.title_widget, alignment=Qt.AlignHCenter)
